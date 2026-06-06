@@ -4,6 +4,7 @@ import ExpenseForm from './components/ExpenseForm';
 import ExpenseTable from './components/ExpenseTable';
 import FilterBar from './components/FilterBar';
 import SummaryPanel from './components/SummaryPanel';
+import ExpenseChart from './components/ExpenseChart';
 
 function App() {
     const {
@@ -119,6 +120,7 @@ function App() {
                 />
 
                 <SummaryPanel expenses={filteredExpenses} />
+                <ExpenseChart expenses={filteredExpenses} />
 
                 {loading ? (
                     <div className="text-center text-gray-500 py-12">
