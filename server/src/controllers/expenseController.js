@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const { roundToTwo } = require('../utils/formatters');
 
 const dataPath = path.join(__dirname, '../data/expenses.json');
 
@@ -44,7 +45,7 @@ const createExpense = (req, res) => {
         const expenses = readExpenses();
         const newExpense = {
             id: uuidv4(),
-            amount: parseFloat(amount),
+            amount: roundToTwo(parseFloat(amount)),
             category,
             date,
             note: note || '',
@@ -82,7 +83,7 @@ const updateExpense = (req, res) => {
 
         expenses[index] = {
             ...expenses[index],
-            amount: parseFloat(amount),
+            amount: roundToTwo(parseFloat(amount)),
             category,
             date,
             note: note || '',
