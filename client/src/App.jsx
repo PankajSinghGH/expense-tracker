@@ -1,10 +1,12 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import useExpenses from './hooks/useExpenses';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseTable from './components/ExpenseTable';
 import FilterBar from './components/FilterBar';
 import SummaryPanel from './components/SummaryPanel';
 import ExpenseChart from './components/ExpenseChart';
+import Skeleton from './components/Skeleton';
+import Toast from './components/Toast';
 
 function App() {
     const {
@@ -21,15 +23,18 @@ function App() {
     const [filterDateRange, setFilterDateRange] = useState('all');
     const [customDateFrom, setCustomDateFrom] = useState('');
     const [customDateTo, setCustomDateTo] = useState('');
+    const [toast, setToast] = useState(null);
+
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+    };
 
     const filteredExpenses = useMemo(() => {
         return expenses.filter((expense) => {
-            // Category filter
             if (filterCategory !== 'all' && expense.category !== filterCategory) {
                 return false;
             }
 
-            // Date filter
             const expenseDate = new Date(expense.date);
             const now = new Date();
 
@@ -59,6 +64,7 @@ function App() {
 
     const handleAdd = async (data) => {
         await addExpense(data);
+        showToast('Expense added successfully!');
     };
 
     const handleEdit = (expense) => {
@@ -69,11 +75,13 @@ function App() {
     const handleUpdate = async (data) => {
         await editExpense(editingExpense.id, data);
         setEditingExpense(null);
+        showToast('Expense updated successfully!');
     };
 
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this expense?')) {
             await removeExpense(id);
+            showToast('Expense deleted!', 'error');
         }
     };
 
@@ -88,6 +96,14 @@ function App() {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
+
             <header className="bg-white shadow-sm">
                 <div className="max-w-5xl mx-auto px-4 py-4">
                     <h1 className="text-2xl font-bold text-gray-800">
@@ -119,19 +135,18 @@ function App() {
                     onCustomDateChange={handleCustomDateChange}
                 />
 
-                <SummaryPanel expenses={filteredExpenses} />
-                <ExpenseChart expenses={filteredExpenses} />
-
                 {loading ? (
-                    <div className="text-center text-gray-500 py-12">
-                        Loading expenses...
-                    </div>
+                    <Skeleton />
                 ) : (
-                    <ExpenseTable
-                        expenses={filteredExpenses}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                    />
+                    <>
+                        <SummaryPanel expenses={filteredExpenses} />
+                        <ExpenseChart expenses={filteredExpenses} />
+                        <ExpenseTable
+                            expenses={filteredExpenses}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
+                    </>
                 )}
             </main>
         </div>
