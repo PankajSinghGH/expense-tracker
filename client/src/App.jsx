@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import useExpenses from './hooks/useExpenses';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseTable from './components/ExpenseTable';
+import FilterBar from './components/FilterBar';
+import SummaryPanel from './components/SummaryPanel';
 
 function App() {
     const {
@@ -14,6 +16,45 @@ function App() {
     } = useExpenses();
 
     const [editingExpense, setEditingExpense] = useState(null);
+    const [filterCategory, setFilterCategory] = useState('all');
+    const [filterDateRange, setFilterDateRange] = useState('all');
+    const [customDateFrom, setCustomDateFrom] = useState('');
+    const [customDateTo, setCustomDateTo] = useState('');
+
+    const filteredExpenses = useMemo(() => {
+        return expenses.filter((expense) => {
+            // Category filter
+            if (filterCategory !== 'all' && expense.category !== filterCategory) {
+                return false;
+            }
+
+            // Date filter
+            const expenseDate = new Date(expense.date);
+            const now = new Date();
+
+            if (filterDateRange === 'thisMonth') {
+                return (
+                    expenseDate.getMonth() === now.getMonth() &&
+                    expenseDate.getFullYear() === now.getFullYear()
+                );
+            }
+
+            if (filterDateRange === 'lastMonth') {
+                const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1);
+                return (
+                    expenseDate.getMonth() === lastMonth.getMonth() &&
+                    expenseDate.getFullYear() === lastMonth.getFullYear()
+                );
+            }
+
+            if (filterDateRange === 'custom') {
+                if (customDateFrom && expenseDate < new Date(customDateFrom)) return false;
+                if (customDateTo && expenseDate > new Date(customDateTo)) return false;
+            }
+
+            return true;
+        });
+    }, [expenses, filterCategory, filterDateRange, customDateFrom, customDateTo]);
 
     const handleAdd = async (data) => {
         await addExpense(data);
@@ -39,6 +80,11 @@ function App() {
         setEditingExpense(null);
     };
 
+    const handleCustomDateChange = (field, value) => {
+        if (field === 'from') setCustomDateFrom(value);
+        if (field === 'to') setCustomDateTo(value);
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow-sm">
@@ -62,13 +108,25 @@ function App() {
                     onCancel={handleCancel}
                 />
 
+                <FilterBar
+                    filterCategory={filterCategory}
+                    filterDateRange={filterDateRange}
+                    customDateFrom={customDateFrom}
+                    customDateTo={customDateTo}
+                    onCategoryChange={setFilterCategory}
+                    onDateRangeChange={setFilterDateRange}
+                    onCustomDateChange={handleCustomDateChange}
+                />
+
+                <SummaryPanel expenses={filteredExpenses} />
+
                 {loading ? (
                     <div className="text-center text-gray-500 py-12">
                         Loading expenses...
                     </div>
                 ) : (
                     <ExpenseTable
-                        expenses={expenses}
+                        expenses={filteredExpenses}
                         onEdit={handleEdit}
                         onDelete={handleDelete}
                     />
