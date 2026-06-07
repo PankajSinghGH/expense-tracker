@@ -11,23 +11,22 @@ const useExpenses = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Fetch all expenses on mount
-    useEffect(() => {
-        loadExpenses();
-    }, []);
-
     const loadExpenses = async () => {
         try {
             setLoading(true);
             setError(null);
             const res = await fetchExpenses();
-            setExpenses(res.data);
-        } catch (err) {
+            setExpenses(Array.isArray(res.data) ? res.data : []);
+        } catch {
             setError('Failed to load expenses');
         } finally {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        loadExpenses();
+    }, []);
 
     const addExpense = async (data) => {
         try {
