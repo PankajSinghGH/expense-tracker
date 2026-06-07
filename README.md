@@ -5,11 +5,10 @@ A full-stack expense tracking application built with React and Node.js. Users ca
 This is Exercise 2 from the Studio Graphene Full Stack Developer assessment.
 
 ---
-
 ## Live Demo
 
-- **Frontend:** (add Vercel link after deployment)
-- **Backend:** (add Render link after deployment)
+- **Frontend:** [https://expense-tracker-[your-vercel-id].vercel.app](https://expense-tracker-niairjpid-pankajsinghghs-projects.vercel.app)
+- **Backend:** [https://expense-tracker-api-6mt7.onrender.com](https://expense-tracker-api-6mt7.onrender.com)
 
 ---
 
