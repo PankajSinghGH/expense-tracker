@@ -1,18 +1,18 @@
 const CATEGORY_COLORS = {
-    Food: 'bg-green-100 text-green-700',
-    Transport: 'bg-blue-100 text-blue-700',
-    Bills: 'bg-red-100 text-red-700',
-    Entertainment: 'bg-purple-100 text-purple-700',
-    Other: 'bg-gray-100 text-gray-700',
+    Food: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    Transport: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    Bills: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    Entertainment: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+    Other: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400',
 };
 
 const ExpenseTable = ({ expenses, onEdit, onDelete }) => {
     if (expenses.length === 0) {
         return (
-            <div className="bg-white rounded-lg shadow p-12 text-center">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-12 text-center">
                 <p className="text-4xl mb-3">🧾</p>
-                <p className="text-gray-500 font-medium">No expenses yet</p>
-                <p className="text-gray-400 text-sm mt-1">
+                <p className="text-gray-500 dark:text-gray-400 font-medium">No expenses yet</p>
+                <p className="text-gray-400 dark:text-gray-600 text-sm mt-1">
                     Add your first expense using the form above
                 </p>
             </div>
@@ -20,24 +20,27 @@ const ExpenseTable = ({ expenses, onEdit, onDelete }) => {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
             <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b">
+                <thead className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
                 <tr>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Date</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Category</th>
-                    <th className="text-left px-4 py-3 text-gray-600 font-medium">Note</th>
-                    <th className="text-right px-4 py-3 text-gray-600 font-medium">Amount</th>
-                    <th className="text-right px-4 py-3 text-gray-600 font-medium">Actions</th>
+                    {['Date', 'Category', 'Note', 'Amount', 'Actions'].map((h) => (
+                        <th
+                            key={h}
+                            className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 ${h === 'Amount' || h === 'Actions' ? 'text-right' : 'text-left'}`}
+                        >
+                            {h}
+                        </th>
+                    ))}
                 </tr>
                 </thead>
-                <tbody>
-                {expenses.map((expense, index) => (
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {expenses.map((expense) => (
                     <tr
                         key={expense.id}
-                        className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                        className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-150"
                     >
-                        <td className="px-4 py-3 text-gray-600">
+                        <td className="px-4 py-3 text-gray-600 dark:text-gray-400 text-sm">
                             {new Date(expense.date).toLocaleDateString('en-IN', {
                                 day: '2-digit',
                                 month: 'short',
@@ -49,10 +52,10 @@ const ExpenseTable = ({ expenses, onEdit, onDelete }) => {
                   {expense.category}
                 </span>
                         </td>
-                        <td className="px-4 py-3 text-gray-500">
+                        <td className="px-4 py-3 text-gray-500 dark:text-gray-500">
                             {expense.note || '—'}
                         </td>
-                        <td className="px-4 py-3 text-right font-semibold text-gray-800">
+                        <td className="px-4 py-3 text-right font-bold text-gray-800 dark:text-gray-100">
                             ₹{expense.amount.toLocaleString('en-IN', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
@@ -61,13 +64,13 @@ const ExpenseTable = ({ expenses, onEdit, onDelete }) => {
                         <td className="px-4 py-3 text-right">
                             <button
                                 onClick={() => onEdit(expense)}
-                                className="text-blue-600 hover:text-blue-800 font-medium mr-3"
+                                className="text-cyan-500 hover:text-cyan-400 font-semibold mr-3 text-xs uppercase tracking-wider transition"
                             >
                                 Edit
                             </button>
                             <button
                                 onClick={() => onDelete(expense.id)}
-                                className="text-red-500 hover:text-red-700 font-medium"
+                                className="text-red-400 hover:text-red-300 font-semibold text-xs uppercase tracking-wider transition"
                             >
                                 Delete
                             </button>
