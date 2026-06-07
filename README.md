@@ -1,4 +1,4 @@
-# 💰 Expense Tracker
+# Expense Tracker
 
 A full-stack expense tracking application built with React and Node.js. Users can log daily expenses across categories, filter by date and category, and visualise spending with a bar chart.
 
