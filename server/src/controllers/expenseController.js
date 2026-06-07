@@ -7,11 +7,17 @@ const dataPath = path.join(__dirname, '../data/expenses.json');
 
 // Helper — read expenses from JSON file
 const readExpenses = () => {
-    if (!fs.existsSync(dataPath)) {
-        fs.writeFileSync(dataPath, JSON.stringify([]));
-    }
-    const data = fs.readFileSync(dataPath, 'utf-8');
-    return JSON.parse(data);
+    const readExpenses = () => {
+        const dir = path.dirname(dataPath);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        if (!fs.existsSync(dataPath)) {
+            fs.writeFileSync(dataPath, JSON.stringify([]));
+        }
+        const data = fs.readFileSync(dataPath, 'utf-8');
+        return JSON.parse(data);
+    };
 };
 
 // Helper — write expenses to JSON file
