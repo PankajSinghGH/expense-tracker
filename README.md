@@ -7,8 +7,8 @@ This is Exercise 2 from the Studio Graphene Full Stack Developer assessment.
 ---
 ## Live Demo
 
-- **Frontend:** [https://expense-tracker-[your-vercel-id].vercel.app](https://expense-tracker-niairjpid-pankajsinghghs-projects.vercel.app)
-- **Backend:** [https://expense-tracker-api-6mt7.onrender.com](https://expense-tracker-api-6mt7.onrender.com)
+- **Frontend:** [click here for frontend ](https://expense-tracker-niairjpid-pankajsinghghs-projects.vercel.app)
+- **Backend:** [click here for backend ](https://expense-tracker-api-6mt7.onrender.com)
 
 ---
 
